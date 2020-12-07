@@ -2,8 +2,8 @@
 
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Latest Release](https://img.shields.io/packagist/v/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch.svg?style=flat-square)](https://packagist.org/packages/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch)
-[![Travis](https://img.shields.io/travis/com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/master.svg?style=flat-square)](https://travis-ci.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch)
-[![PhpStan](https://img.shields.io/badge/PHPStan-level%202-brightgreen.svg?style=flat-square)](#)
+[![Tests](https://img.shields.io/github/workflow/status/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/Codeception?style=flat-square&logo=github&label=codeception)](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/actions?query=workflow%3A%22Codeception%22)
+[![PhpStan](https://img.shields.io/github/workflow/status/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/PHP%20Stan?style=flat-square&logo=github&label=phpstan%20level%202)](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/actions?query=workflow%3A%22PHP%20Stan%22)
 
 A Index Storage Extension for [Pimcore Dynamic Search](https://github.com/dachcom-digital/pimcore-dynamic-search). Store data with the elasticsearch index service.
 
