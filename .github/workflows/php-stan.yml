@@ -47,7 +47,6 @@ jobs:
                     mv skeleton/var .
                     mv skeleton/web .
                     mv skeleton/src/AppBundle src
-                    ls -la app/
 
             -   name: Setup Bundle
                 env:
