@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfiguredIndexProviderInterface
 {
     /**
-     * @var LoggerInterface
+     * @var ClientBuilderInterface
      */
     protected $clientBuilder;
 
