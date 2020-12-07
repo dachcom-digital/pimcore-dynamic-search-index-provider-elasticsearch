@@ -1,0 +1,13 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    #
+    # Index Provider for Dynamic Search Bundle
+    #
+    DsElasticSearchBundle\Provider\ElasticsearchIndexProvider:
+        tags:
+            - { name: dynamic_search.index_provider, identifier: elasticsearch }

@@ -1,0 +1,9 @@
+imports:
+    - { resource: services/*.yml }
+
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false

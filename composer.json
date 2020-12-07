@@ -1,0 +1,39 @@
+{
+    "name": "dachcom-digital/dynamic-search-index-provider-elastic-search",
+    "type": "dynamic-search-provider-bundle",
+    "license": "GPL-3.0+",
+    "description": "",
+    "keywords": ["pimcore", "search", "dynamic-search", "index-provider","elasticsearch"],
+    "homepage": "https://github.com/dachcom-digital/dynamic-search-index-provider-elastic-search",
+    "authors": [
+        {
+            "name": "DACHCOM.DIGITAL Stefan Hagspiel",
+            "email": "shagspiel@dachcom.ch",
+            "homepage": "http://www.dachcom.com/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "DsElasticSearchBundle\\": "src/DsElasticSearchBundle"
+        }
+    },
+    "require": {
+        "symfony/symfony": "^4|^5",
+        "pimcore/pimcore": "^6.6",
+        "dachcom-digital/dynamic-search": "^0.7",
+        "elasticsearch/elasticsearch": "^7.0",
+        "ongr/elasticsearch-dsl": ":~7.1.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "~2.4.0",
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-symfony": "^0.12",
+        "symplify/easy-coding-standard": "^5.4"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.7-dev"
+        }
+    }
+}

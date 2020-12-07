@@ -1,0 +1,22 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Output Channel Services
+
+    DsElasticSearchBundle\OutputChannel\SearchOutputChannel:
+        tags:
+            - { name: dynamic_search.output_channel, identifier: elasticsearch_search }
+
+    #DsElasticSearchBundle\OutputChannel\MultiSearchOutputChannel:
+    #    tags:
+    #       - { name: dynamic_search.output_channel, identifier: elasticsearch_multi_search }
+
+    # Filter / Action
+
+    DsElasticSearchBundle\OutputChannel\Modifier\Filter\QueryCleanTermFilter:
+        tags:
+            - { name: dynamic_search.output_channel.modifier.filter, output_channel_service_identifier: elasticsearch_search, filter: query.clean_term }

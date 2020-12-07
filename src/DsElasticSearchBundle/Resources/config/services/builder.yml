@@ -1,0 +1,9 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    DsElasticSearchBundle\Builder\ClientBuilderInterface: '@DsElasticSearchBundle\Builder\ClientBuilder'
+    DsElasticSearchBundle\Builder\ClientBuilder: ~

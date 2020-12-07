@@ -1,0 +1,14 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    DsElasticSearchBundle\Index\Field\DynamicField:
+        tags:
+            - { name: dynamic_search.index.field, identifier: dynamic, index_provider: elasticsearch }
+
+    DsElasticSearchBundle\Index\Field\ExplicitField:
+        tags:
+            - { name: dynamic_search.index.field, identifier: explicit, index_provider: elasticsearch }
