@@ -8,7 +8,7 @@
 A Index Storage Extension for [Pimcore Dynamic Search](https://github.com/dachcom-digital/pimcore-dynamic-search). Store data with the elasticsearch index service.
 
 ## Requirements
-- Pimcore >= 6.3
+- Pimcore >= 6.6
 - Symfony >= 4.4
 - Pimcore Dynamic Search
 
