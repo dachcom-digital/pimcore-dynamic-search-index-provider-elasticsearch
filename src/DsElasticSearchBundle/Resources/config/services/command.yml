@@ -1,0 +1,12 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    DsElasticSearchBundle\Command\RebuildIndexCommand:
+        arguments:
+            $dsFullConfiguration: '%dynamic_search.context.full_configuration%'
+        tags:
+            - { name: console.command, command: 'dynamic-search:es:rebuild-index-mapping' }

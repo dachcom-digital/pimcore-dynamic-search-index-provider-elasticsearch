@@ -17,7 +17,6 @@ A Index Storage Extension for [Pimcore Dynamic Search](https://github.com/dachco
 ## Basic Setup
 
 ```yaml
-
 dynamic_search:
     context:
         default:
@@ -97,4 +96,15 @@ TBD
 ## Output Normalizer
 A Output Normalizer can be defined for each output channel.
 
-TBD
+***
+
+## Commands
+
+### Rebuild Index Mapping
+Use this command to rebuild a index by passing your context name with argument `-c`
+
+> **Attention!** By executing this command, the index gets removed and all data will be lost! 
+
+```bash
+$  bin/console dynamic-search:es:rebuild-index -c default
+```

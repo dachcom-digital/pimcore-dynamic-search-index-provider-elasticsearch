@@ -2,9 +2,7 @@
 
 namespace DsElasticSearchBundle\Service;
 
-use DsElasticSearchBundle\Exception\ClientException;
 use DynamicSearchBundle\Document\IndexDocument;
-use DynamicSearchBundle\Resource\Container\IndexFieldContainerInterface;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 
@@ -61,11 +59,13 @@ class IndexPersistenceService
     }
 
     /**
-     * @param array $params
+     * @param IndexDocument $indexDocument
      *
      * @return array
+     *
+     * @throws \Exception
      */
-    public function createIndex($params = [])
+    public function createIndex(?IndexDocument $indexDocument = null)
     {
         $analysis = [];
         $settings = $this->indexOptions['index']['settings'];
@@ -84,8 +84,13 @@ class IndexPersistenceService
             'settings' => $settings,
         ];
 
-        if (isset($params['mappings']) && is_array($params['mappings'])) {
-            $metaData['mappings'] = $this->parseMappings($params['mappings']);
+        $mappings = null;
+        if ($indexDocument instanceof IndexDocument) {
+            $mappings = $this->parseMappings($indexDocument);
+        }
+
+        if ($mappings !== null) {
+            $metaData['mappings'] = $mappings;
         }
 
         $indexParams = [
@@ -109,24 +114,6 @@ class IndexPersistenceService
         }
 
         return $this->client->indices()->delete(['index' => $indexName]);
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function dropAndCreateIndex($params = [])
-    {
-        try {
-            if ($this->indexExists()) {
-                $this->dropIndex();
-            }
-        } catch (\Exception $e) {
-            // Do nothing, our target is to create the new index.
-        }
-
-        return $this->createIndex($params);
     }
 
     /**
@@ -226,6 +213,8 @@ class IndexPersistenceService
 
     /**
      * @param IndexDocument $document
+     *
+     * @throws \Exception
      */
     public function persist(IndexDocument $document)
     {
@@ -242,6 +231,7 @@ class IndexPersistenceService
      * @param array  $data
      *
      * @return array
+     * @throws \Exception
      */
     public function bulk(string $operation, array $data = [])
     {
@@ -269,7 +259,7 @@ class IndexPersistenceService
      * @param array  $params
      *
      * @return array|callable
-     * @throws ClientException
+     * @throws \Exception
      */
     public function commit($commitMode = 'refresh', array $params = [])
     {
@@ -290,7 +280,7 @@ class IndexPersistenceService
         $bulkResponse = $this->client->bulk($params);
 
         if ($bulkResponse['errors']) {
-            throw new ClientException(json_encode($bulkResponse));
+            throw new \Exception(json_encode($bulkResponse));
         }
 
         switch ($commitMode) {
@@ -366,12 +356,35 @@ class IndexPersistenceService
     }
 
     /**
-     * @param array|IndexFieldContainerInterface[] $mappings
+     * @param IndexDocument $indexDocument
      *
-     * @return array[]
+     * @return array|null
+     * @throws \Exception
      */
-    protected function parseMappings(array $mappings)
+    protected function parseMappings(IndexDocument $indexDocument)
     {
+        $mappings = [];
+        $hasDynamicFields = false;
+
+        foreach ($indexDocument->getIndexFields() as $indexField) {
+
+            // fields should be dynamic, do not create mapping
+            if ($indexField->getIndexType() === 'dynamic') {
+                $hasDynamicFields = true;
+                continue;
+            }
+
+            $mappings[] = $indexField;
+        }
+
+        if ($hasDynamicFields === true && count($mappings) > 0) {
+            throw new \Exception('You cannot mix dynamic and explicit index fields for mappings');
+        }
+
+        if (count($mappings) === 0) {
+            return null;
+        }
+
         $fields = [];
         foreach ($mappings as $mapping) {
             $data = $mapping->getData();
@@ -382,5 +395,4 @@ class IndexPersistenceService
             'properties' => $fields
         ];
     }
-
 }

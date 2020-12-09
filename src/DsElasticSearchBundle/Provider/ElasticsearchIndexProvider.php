@@ -4,7 +4,6 @@ namespace DsElasticSearchBundle\Provider;
 
 use DsElasticSearchBundle\Builder\ClientBuilderInterface;
 use DsElasticSearchBundle\DsElasticSearchBundle;
-use DsElasticSearchBundle\Exception\ClientException;
 use DsElasticSearchBundle\Service\IndexPersistenceService;
 use DynamicSearchBundle\Context\ContextDefinitionInterface;
 use DynamicSearchBundle\Document\IndexDocument;
@@ -102,39 +101,21 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
      */
     public function preConfigureIndex(IndexDocument $indexDocument)
     {
-        $mappings = [];
-        $hasDynamicFields = false;
-
-        foreach ($indexDocument->getIndexFields() as $indexField) {
-
-            // fields should be dynamic, do not create mapping
-            if ($indexField->getIndexType() === 'dynamic') {
-                $hasDynamicFields = true;
-                continue;
-            }
-
-            $mappings[] = $indexField;
-        }
-
-        if ($hasDynamicFields === true && count($mappings) > 0) {
-            throw new \Exception('You cannot mix dynamic and explicit index fields for mappings');
-        }
-
-        // no fields for mapping found.
-        if (count($mappings) === 0) {
-            return;
-        }
-
         $client = $this->clientBuilder->build($this->options);
 
         $this->indexService = new IndexPersistenceService($client, $this->options);
 
-        // @todo: update index?
+        // re-mapping is not possible.
+        // use dynamic-search:es:rebuild-index-mapping command to rebuild index
         if ($this->indexService->indexExists()) {
             return;
         }
 
-        $this->indexService->createIndex(['mappings' => $mappings]);
+        try {
+            $this->indexService->createIndex($indexDocument);
+        } catch (\Throwable $e) {
+            throw new ProviderException(sprintf('Error while creating index: %s', $e->getMessage()), DsElasticSearchBundle::PROVIDER_NAME, $e);
+        }
     }
 
     /**
@@ -150,8 +131,11 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
             return;
         }
 
-        $this->indexService->createIndex();
-
+        try {
+            $this->indexService->createIndex();
+        } catch (\Throwable $e) {
+            throw new ProviderException(sprintf('Error while creating index: %s', $e->getMessage()), DsElasticSearchBundle::PROVIDER_NAME, $e);
+        }
     }
 
     /**
@@ -164,7 +148,11 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
             return;
         }
 
-        $this->indexService->commit();
+        try {
+            $this->indexService->commit();
+        } catch (\Throwable $e) {
+            throw new ProviderException(sprintf('Error while committing to index: %s', $e->getMessage()), DsElasticSearchBundle::PROVIDER_NAME, $e);
+        }
 
         $this->logger->debug(
             sprintf('Committing data to index "%s"', $this->options['index']['identifier']),
@@ -222,7 +210,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
      * @param ContextDefinitionInterface $contextDefinition
      * @param IndexDocument              $indexDocument
      *
-     * @throws ClientException
+     * @throws ProviderException
      */
     protected function executeIndex(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
     {
@@ -230,7 +218,11 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
             return;
         }
 
-        $this->indexService->persist($indexDocument);
+        try {
+            $this->indexService->persist($indexDocument);
+        } catch (\Throwable $e) {
+            throw new ProviderException(sprintf('Error while persisting data: %s', $e->getMessage()), DsElasticSearchBundle::PROVIDER_NAME, $e);
+        }
 
         $this->logger->debug(
             sprintf('Adding document with id %s to elasticsearch index "%s"', $indexDocument->getDocumentId(), $this->options['index']['identifier']),
@@ -243,7 +235,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
      * @param ContextDefinitionInterface $contextDefinition
      * @param IndexDocument              $indexDocument
      *
-     * @throws ClientException
+     * @throws ProviderException
      */
     protected function executeInsert(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
     {
@@ -257,8 +249,12 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
             return;
         }
 
-        $this->indexService->persist($indexDocument);
-        $this->indexService->commit();
+        try {
+            $this->indexService->persist($indexDocument);
+            $this->indexService->commit();
+        } catch (\Throwable $e) {
+            throw new ProviderException(sprintf('Error while persisting and committing data: %s', $e->getMessage()), DsElasticSearchBundle::PROVIDER_NAME, $e);
+        }
 
         $this->logger->debug(
             sprintf('Adding document with id %s to elasticsearch index "%s"', $indexDocument->getDocumentId(), $this->options['index']['identifier']),
@@ -271,7 +267,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
      * @param ContextDefinitionInterface $contextDefinition
      * @param IndexDocument              $indexDocument
      *
-     * @throws ClientException
+     * @throws ProviderException
      */
     protected function executeUpdate(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
     {
@@ -314,8 +310,6 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
     /**
      * @param ContextDefinitionInterface $contextDefinition
      * @param IndexDocument              $indexDocument
-     *
-     * @throws ClientException
      */
     protected function executeDelete(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
     {
