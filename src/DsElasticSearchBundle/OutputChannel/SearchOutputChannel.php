@@ -143,6 +143,6 @@ class SearchOutputChannel implements OutputChannelInterface
      */
     public function getHitCount($result)
     {
-        return count($result);
+        return $result['hits']['total']['value'] ?? 0;
     }
 }

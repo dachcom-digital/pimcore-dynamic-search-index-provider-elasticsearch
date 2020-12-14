@@ -116,7 +116,6 @@ class RebuildIndexCommand extends Command
         $indexService = new IndexPersistenceService($client, $options);
 
         if ($indexService->indexExists()) {
-
             $helper = $this->getHelper('question');
             $text = 'This command will drop the selected index and all data will be lost! Continue?';
             $commandText = sprintf(' <info>%s (y/n)</info> [<comment>%s</comment>]:', $text, 'no');
@@ -125,13 +124,13 @@ class RebuildIndexCommand extends Command
             if (!$helper->ask($input, $output, $question)) {
                 return 0;
             }
-        }
 
-        try {
-            $indexService->dropIndex();
-        } catch (\Throwable $e) {
-            $output->writeln(sprintf('Error while dropping index: %s', $e->getMessage()));
-            return 0;
+            try {
+                $indexService->dropIndex();
+            } catch (\Throwable $e) {
+                $output->writeln(sprintf('Error while dropping index: %s', $e->getMessage()));
+                return 0;
+            }
         }
 
         try {

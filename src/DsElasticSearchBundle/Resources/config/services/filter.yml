@@ -1,0 +1,10 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    DsElasticSearchBundle\OutputChannel\Filter\AggregationFilter:
+        tags:
+            - { name: dynamic_search.index.filter, identifier: aggregation, index_provider: elasticsearch }

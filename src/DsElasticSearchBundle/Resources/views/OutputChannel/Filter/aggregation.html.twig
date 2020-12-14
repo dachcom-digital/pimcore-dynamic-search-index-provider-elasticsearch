@@ -1,0 +1,16 @@
+<div class="list-group">
+    {% if label is not null %}
+        <h5>{{ label|trans }}</h5>
+    {% endif %}
+    <ul class="list-unstyled">
+        {% for line in values %}
+            {% set c_id = random() %}
+            <li>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="relations-{{ c_id }}" name="{{ line.form_name }}" value="{{ line.value }}" {{ line.active ? 'checked="checked"' : '' }}>
+                    <label class="form-check-label" for="relations-{{ c_id }}">{{ line.relation_label }} ({{ line.count }})</label>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

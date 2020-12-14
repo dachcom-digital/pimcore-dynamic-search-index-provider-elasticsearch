@@ -1,0 +1,10 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    DsElasticSearchBundle\Normalizer\DocumentNormalizer:
+        tags:
+            - { name: dynamic_search.document_normalizer, identifier: es_document_normalizer, index_provider: elasticsearch }
