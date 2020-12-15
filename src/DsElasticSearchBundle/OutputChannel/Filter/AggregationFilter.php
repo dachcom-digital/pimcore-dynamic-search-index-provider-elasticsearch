@@ -5,6 +5,7 @@ namespace DsElasticSearchBundle\OutputChannel\Filter;
 use DynamicSearchBundle\EventDispatcher\OutputChannelModifierEventDispatcher;
 use DynamicSearchBundle\Filter\FilterInterface;
 use DynamicSearchBundle\OutputChannel\Context\OutputChannelContextInterface;
+use DynamicSearchBundle\OutputChannel\Query\Result\RawResultInterface;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
@@ -133,7 +134,7 @@ class AggregationFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function findFilterValueInResult($result)
+    public function findFilterValueInResult(RawResultInterface $rawResult)
     {
         // not supported?
         return null;
@@ -142,19 +143,21 @@ class AggregationFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function buildViewVars($filterValues, $result, $query)
+    public function buildViewVars(RawResultInterface $rawResult, $filterValues, $query)
     {
+        $response = $rawResult->getParameter('fullDatabaseResponse');
+
         $viewVars = [
             'template' => sprintf('%s/aggregation.html.twig', self::VIEW_TEMPLATE_PATH),
             'label'    => $this->options['label'],
             'values'   => []
         ];
 
-        if (count($result['aggregations'][$this->name]['buckets']) === 0) {
+        if (count($response['aggregations'][$this->name]['buckets']) === 0) {
             return null;
         }
 
-        $viewVars['values'] = $this->buildResultArray($result['aggregations'][$this->name]['buckets']);
+        $viewVars['values'] = $this->buildResultArray($response['aggregations'][$this->name]['buckets']);
 
         return $viewVars;
     }

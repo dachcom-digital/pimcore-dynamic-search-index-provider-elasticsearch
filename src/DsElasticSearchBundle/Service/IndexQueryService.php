@@ -15,7 +15,7 @@ class IndexQueryService
     /**
      * @var array
      */
-    protected $indexOptions = [];
+    protected $indexOptions;
 
     /**
      * @param Client $client
@@ -27,11 +27,20 @@ class IndexQueryService
         $this->indexOptions = $indexOptions;
     }
 
+    /**
+     * @return Search
+     */
     public function createSearch()
     {
         return new Search();
     }
 
+    /**
+     * @param array $query
+     * @param array $params
+     *
+     * @return array|callable
+     */
     public function search(array $query, array $params = [])
     {
         $requestParams = [
@@ -46,17 +55,9 @@ class IndexQueryService
         return $this->client->search($requestParams);
     }
 
-    public function getScrollConfiguration($raw, $scrollDuration)
-    {
-        $scrollConfig = [];
-        if (isset($raw['_scroll_id'])) {
-            $scrollConfig['_scroll_id'] = $raw['_scroll_id'];
-            $scrollConfig['duration'] = $scrollDuration;
-        }
-
-        return $scrollConfig;
-    }
-
+    /**
+     * @return int
+     */
     public function getIndexDocumentCount()
     {
         $body = [
@@ -69,21 +70,17 @@ class IndexQueryService
         return $results['count'];
     }
 
-    public function scroll($scrollId, $scrollDuration = '5m')
-    {
-        return $this->client->scroll(['scroll_id' => $scrollId, 'scroll' => $scrollDuration]);
-    }
-
-    public function clearScroll($scrollId)
-    {
-        return $this->client->clearScroll(['scroll_id' => $scrollId]);
-    }
-
+    /**
+     * @return array
+     */
     public function clearCache()
     {
         return $this->client->indices()->clearCache(['index' => $this->getIndexName()]);
     }
 
+    /**
+     * @return string
+     */
     protected function getIndexName()
     {
         return $this->indexOptions['index']['identifier'];

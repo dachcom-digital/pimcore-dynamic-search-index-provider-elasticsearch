@@ -5,6 +5,10 @@ services:
         autoconfigure: true
         public: false
 
-    DsElasticSearchBundle\Normalizer\DocumentNormalizer:
+    DsElasticSearchBundle\Normalizer\DocumentSourceNormalizer:
         tags:
-            - { name: dynamic_search.document_normalizer, identifier: es_document_normalizer, index_provider: elasticsearch }
+            - { name: dynamic_search.document_normalizer, identifier: es_document_source_normalizer, index_provider: elasticsearch }
+
+    DsElasticSearchBundle\Normalizer\DocumentRawNormalizer:
+        tags:
+            - { name: dynamic_search.document_normalizer, identifier: es_document_raw_normalizer, index_provider: elasticsearch }

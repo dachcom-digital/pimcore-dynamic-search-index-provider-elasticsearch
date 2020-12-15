@@ -3,10 +3,12 @@
 namespace DsElasticSearchBundle\Normalizer;
 
 use DynamicSearchBundle\Context\ContextDefinitionInterface;
+use DynamicSearchBundle\Exception\NormalizerException;
 use DynamicSearchBundle\Normalizer\DocumentNormalizerInterface;
+use DynamicSearchBundle\OutputChannel\Query\Result\RawResultInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DocumentNormalizer implements DocumentNormalizerInterface
+class DocumentSourceNormalizer implements DocumentNormalizerInterface
 {
     /**
      * @var array
@@ -32,11 +34,17 @@ class DocumentNormalizer implements DocumentNormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize(ContextDefinitionInterface $contextData, string $outputChannelName, $data)
+    public function normalize(RawResultInterface $rawResult, ContextDefinitionInterface $contextDefinition, string $outputChannelName)
     {
-        $normalizedDocuments = [];
+        $data = $rawResult->getData();
 
-        foreach ($data['hits']['hits'] as $hit) {
+        if (!is_array($data)) {
+            $message = sprintf('Data needs to be type of "array", "%s" given', is_object($data) ? get_class($data) : gettype($data));
+            throw new NormalizerException($message, __CLASS__);
+        }
+
+        $normalizedDocuments = [];
+        foreach ($data as $hit) {
             // remove blacklist keys?
             $normalizedDocuments[] = $hit['_source'];
         }
