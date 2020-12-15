@@ -18,6 +18,7 @@ A Index Storage Extension for [Pimcore Dynamic Search](https://github.com/dachco
 
 ```yaml
 dynamic_search:
+    enable_pimcore_element_listener: true
     context:
         default:
             index_provider:
@@ -51,6 +52,23 @@ dynamic_search:
                                 max_gram: 5
                                 token_chars:
                                     - letter
+            output_channels:
+                suggestions:
+                    service: 'elasticsearch_search'
+                    normalizer:
+                        service: 'es_document_raw_normalizer'
+                    paginator:
+                        enabled: false
+                search:
+                    service: 'elasticsearch_search'
+                    use_frontend_controller: true
+                    options:
+                        result_limit: 10
+                    normalizer:
+                        service: 'es_document_source_normalizer'
+                    paginator:
+                        enabled: true
+                        max_per_page: 10
 ```
 
 ***
@@ -77,6 +95,9 @@ dynamic_search:
 ## Output Channel Services
 
 ### Search
+This channel service just creates a simple DSL search class.
+You're able to modify the search by hooking via `dynamic_search.output_channel.modifier.action` into the `post_query_build` action.
+
 **Identifier**: `elasticsearch_search`   
 **Available Options**:   
 
@@ -95,6 +116,18 @@ TBD
 
 ## Output Normalizer
 A Output Normalizer can be defined for each output channel.
+
+### es_document_raw_normalizer
+Use this normalizer to get the untouched elasticsearch response.
+
+**Available Options**:   
+Currently none
+
+### es_document_source_normalizer
+Use this normalizer to get all document values (`_source`) stored in `response.hits.hits[]`
+
+**Available Options**:   
+Currently none
 
 ***
 
