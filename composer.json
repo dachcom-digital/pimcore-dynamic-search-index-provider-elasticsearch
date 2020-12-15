@@ -1,10 +1,10 @@
 {
-    "name": "dachcom-digital/dynamic-search-index-provider-elastic-search",
+    "name": "dachcom-digital/dynamic-search-index-provider-elasticsearch",
     "type": "dynamic-search-provider-bundle",
     "license": "GPL-3.0+",
     "description": "",
     "keywords": ["pimcore", "search", "dynamic-search", "index-provider","elasticsearch"],
-    "homepage": "https://github.com/dachcom-digital/dynamic-search-index-provider-elastic-search",
+    "homepage": "https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch",
     "authors": [
         {
             "name": "DACHCOM.DIGITAL Stefan Hagspiel",
