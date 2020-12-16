@@ -9,9 +9,6 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ds_elasticsearch');
-
-        return $treeBuilder;
+        return new TreeBuilder('ds_elasticsearch');
     }
 }
