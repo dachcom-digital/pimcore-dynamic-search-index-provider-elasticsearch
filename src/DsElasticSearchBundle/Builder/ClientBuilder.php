@@ -27,6 +27,10 @@ class ClientBuilder implements ClientBuilderInterface
         $client = \Elasticsearch\ClientBuilder::create();
         $client->setHosts($indexOptions['index']['hosts']);
 
+        if (!empty($indexOptions['credentials']['username']) && $indexOptions['credentials']['password']) {
+            $client->setBasicAuthentication($indexOptions['credentials']['username'], $indexOptions['credentials']['password']);
+        }
+
         // @todo: add logger?
         //$psrLogger = $this->logger->getPsrLogger();
 

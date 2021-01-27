@@ -60,12 +60,23 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
                     'force_adding_document' => true,
                     'hosts'                 => null,
                     'settings'              => null,
+                    'credentials'           => function (OptionsResolver $spoolResolver) {
+
+                        $spoolResolver->setDefaults([
+                            'username' => null,
+                            'password' => null,
+                        ]);
+
+                        $spoolResolver->setAllowedTypes('username', ['string', 'null']);
+                        $spoolResolver->setAllowedTypes('password', ['string', 'null']);
+                    },
                 ]);
 
                 $spoolResolver->setAllowedTypes('identifier', ['string']);
                 $spoolResolver->setAllowedTypes('force_adding_document', ['bool']);
                 $spoolResolver->setAllowedTypes('hosts', ['array']);
                 $spoolResolver->setAllowedTypes('settings', ['array']);
+                $spoolResolver->setAllowedTypes('credentials', ['array']);
             },
             'analysis' => function (OptionsResolver $spoolResolver) {
 

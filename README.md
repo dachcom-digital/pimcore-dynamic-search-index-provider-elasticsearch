@@ -29,6 +29,9 @@ dynamic_search:
                         hosts:
                             - 'elasticsearch:9200'
                         settings: []
+                        credentials: # optional, empty array
+                            username: '%ES_USERNAME%'
+                            password: '%ES_PASSWORD%'
                     analysis:
                         analyzer:
                             keyword_analyzer:
