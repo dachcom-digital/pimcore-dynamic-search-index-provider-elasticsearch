@@ -120,10 +120,10 @@ class SearchOutputChannel implements OutputChannelInterface
             return $searchContainer;
         }
 
-        $client = $this->clientBuilder->build($this->outputChannelContext->getIndexProviderOptions());
-        $queryService = new IndexQueryService($client, $this->outputChannelContext->getIndexProviderOptions());
-
         $runtimeOptions = $this->outputChannelContext->getRuntimeOptions();
+        $indexProviderOptions = $this->outputChannelContext->getIndexProviderOptions();
+
+        $client = $this->clientBuilder->build($this->outputChannelContext->getIndexProviderOptions());
 
         $currentPage = is_numeric($runtimeOptions['current_page']) ? (int) $runtimeOptions['current_page'] : 1;
         $limit = $this->options['result_limit'] > 0 ? $this->options['result_limit'] : 10;
@@ -138,7 +138,7 @@ class SearchOutputChannel implements OutputChannelInterface
         $query->setSize($limit);
 
         $params = [
-            'index' => 'default',
+            'index' => $indexProviderOptions['index']['identifier'],
             'body'  => $query->toArray(),
         ];
 
