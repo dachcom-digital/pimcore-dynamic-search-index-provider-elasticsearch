@@ -41,16 +41,21 @@ class AggregationFilter implements FilterInterface
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-
-        $resolver->setRequired(['label', 'show_in_frontend', 'relation_label']);
+        $resolver->setRequired(['label', 'show_in_frontend', 'add_as_post_filter', 'multiple', 'relation_label', 'field']);
         $resolver->setAllowedTypes('show_in_frontend', ['bool']);
+        $resolver->setAllowedTypes('add_as_post_filter', ['bool']);
+        $resolver->setAllowedTypes('multiple', ['bool']);
         $resolver->setAllowedTypes('label', ['string', 'null']);
         $resolver->setAllowedTypes('relation_label', ['closure', 'null']);
+        $resolver->setAllowedTypes('field', ['string']);
 
         $resolver->setDefaults([
-            'show_in_frontend' => true,
-            'relation_label'   => null,
-            'label'            => null
+            'show_in_frontend'   => true,
+            'add_as_post_filter' => false,
+            'multiple'           => true,
+            'relation_label'     => null,
+            'label'              => null,
+            'field'              => null,
         ]);
     }
 
@@ -106,31 +111,13 @@ class AggregationFilter implements FilterInterface
         $runtimeOptions = $this->outputChannelContext->getRuntimeOptions();
         $queryFields = $runtimeOptions['request_query_vars'];
 
-        $termsAggregation = new TermsAggregation($this->name, 'entry_type');
+        $termsAggregation = new TermsAggregation($this->name, $this->options['field']);
         $query->addAggregation($termsAggregation);
 
-        foreach ($queryFields as $key => $value) {
-
-            if ($key !== $this->name) {
-                continue;
-            }
-
-            if (!is_array($value)) {
-                continue;
-            }
-
-            $boolQuery = new BoolQuery();
-            foreach ($value as $relationValue) {
-                $relationQuery = new TermQuery($this->name, $relationValue);
-                $boolQuery->add($relationQuery, BoolQuery::MUST);
-            }
-
-            $query->addQuery($boolQuery);
-        }
+        $this->addQueryFilter($query, $queryFields);
 
         return $query;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -150,7 +137,8 @@ class AggregationFilter implements FilterInterface
         $viewVars = [
             'template' => sprintf('%s/aggregation.html.twig', self::VIEW_TEMPLATE_PATH),
             'label'    => $this->options['label'],
-            'values'   => []
+            'multiple' => $this->options['multiple'],
+            'values'   => [],
         ];
 
         if (count($response['aggregations'][$this->name]['buckets']) === 0) {
@@ -160,6 +148,45 @@ class AggregationFilter implements FilterInterface
         $viewVars['values'] = $this->buildResultArray($response['aggregations'][$this->name]['buckets']);
 
         return $viewVars;
+    }
+
+    /**
+     * @param Search $query
+     * @param array  $queryFields
+     */
+    protected function addQueryFilter(Search $query, array $queryFields)
+    {
+        if (count($queryFields) === 0) {
+            return;
+        }
+
+        foreach ($queryFields as $key => $value) {
+
+            if ($key !== $this->name) {
+                continue;
+            }
+
+            if ($this->options['multiple'] === true && !is_array($value)) {
+                continue;
+            } elseif ($this->options['multiple'] === false && is_array($value)) {
+                continue;
+            }
+
+            $value = $this->options['multiple'] === false ? [$value] : $value;
+
+            $boolQuery = new BoolQuery();
+
+            foreach ($value as $relationValue) {
+                $relationQuery = new TermQuery($this->name, $relationValue);
+                $boolQuery->add($relationQuery, BoolQuery::MUST);
+            }
+
+            if ($this->options['add_as_post_filter'] === true) {
+                $query->addPostFilter($boolQuery);
+            } else {
+                $query->addQuery($boolQuery);
+            }
+        }
     }
 
     /**
@@ -186,13 +213,19 @@ class AggregationFilter implements FilterInterface
             }
 
             $active = false;
-            if (isset($queryFields[$fieldName]) && in_array($bucket['key'], $queryFields[$fieldName])) {
-                $active = true;
+            if (isset($queryFields[$fieldName])) {
+                if ($this->options['multiple'] === true) {
+                    $active = in_array($bucket['key'], $queryFields[$fieldName]);
+                } else {
+                    $active = $bucket['key'] === $queryFields[$fieldName];
+                }
             }
+
+            $multiple = $this->options['multiple'] ? '[]' : '';
 
             $values[] = [
                 'name'           => $bucket['key'],
-                'form_name'      => $prefix !== null ? sprintf('%s[%s][]', $prefix, $fieldName) : sprintf('%s[]', $fieldName),
+                'form_name'      => $prefix !== null ? sprintf('%s[%s]%s', $prefix, $fieldName, $multiple) : sprintf('%s%s', $fieldName, $multiple),
                 'value'          => $bucket['key'],
                 'count'          => $bucket['doc_count'],
                 'active'         => $active,

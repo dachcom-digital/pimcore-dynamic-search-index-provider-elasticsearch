@@ -87,13 +87,11 @@ jobs:
             -   name: Verify MySql Connection
                 run: |
                     sudo apt-get update
-                    sudo apt-get install -y mysql-client-5.7
+                    sudo apt-get install -y mysql-client
                     mysql -uroot -h127.0.0.1 -proot -e "SHOW DATABASES"
 
             -   name: Setup MySql
                 run: |
-                    mysql -uroot -h127.0.0.1 -proot -e "SET GLOBAL innodb_file_format=Barracuda;"
-                    mysql -uroot -h127.0.0.1 -proot -e "SET GLOBAL innodb_large_prefix=1;"
                     mysql -uroot -h127.0.0.1 -proot -e "CREATE DATABASE dachcom_bundle_test CHARSET=utf8mb4;"
 
             -   name: Get Composer Cache Directory
@@ -125,4 +123,4 @@ jobs:
                 continue-on-error: true
                 run: |
                     bin/console cache:warmup --env=test
-                    vendor/bin/ecs check src/DsElasticSearchBundle --config easy-coding-standard.yml
+                    vendor/bin/ecs check src/DsElasticSearchBundle --config ecs.php
