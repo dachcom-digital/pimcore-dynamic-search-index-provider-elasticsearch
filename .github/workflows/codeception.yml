@@ -91,7 +91,7 @@ jobs:
             -   name: Verify MySql Connection
                 run: |
                     sudo apt-get update
-                    sudo apt-get install -y mariadb-client-10.3
+                    sudo apt-get install -y mysql-client
                     mysql -uroot -h127.0.0.1 -proot -e "SHOW DATABASES"
 
             -   name: Setup MySql
