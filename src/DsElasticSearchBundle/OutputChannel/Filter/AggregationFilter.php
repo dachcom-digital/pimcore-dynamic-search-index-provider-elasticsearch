@@ -41,15 +41,17 @@ class AggregationFilter implements FilterInterface
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(['label', 'show_in_frontend', 'add_as_post_filter', 'multiple', 'relation_label', 'field']);
+        $resolver->setRequired(['label', 'show_in_frontend', 'add_as_post_filter', 'multiple', 'relation_label', 'field', 'query_type']);
         $resolver->setAllowedTypes('show_in_frontend', ['bool']);
         $resolver->setAllowedTypes('add_as_post_filter', ['bool']);
         $resolver->setAllowedTypes('multiple', ['bool']);
         $resolver->setAllowedTypes('label', ['string', 'null']);
         $resolver->setAllowedTypes('relation_label', ['closure', 'null']);
         $resolver->setAllowedTypes('field', ['string']);
-
+        $resolver->setAllowedTypes('query_type', ['string']);
+        
         $resolver->setDefaults([
+            'query_type'         => BoolQuery::MUST,
             'show_in_frontend'   => true,
             'add_as_post_filter' => false,
             'multiple'           => true,
@@ -178,7 +180,7 @@ class AggregationFilter implements FilterInterface
 
             foreach ($value as $relationValue) {
                 $relationQuery = new TermQuery($this->name, $relationValue);
-                $boolQuery->add($relationQuery, BoolQuery::MUST);
+                $boolQuery->add($relationQuery, $this->options['query_type']);
             }
 
             if ($this->options['add_as_post_filter'] === true) {
