@@ -41,7 +41,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(Fixer\Operator\BinaryOperatorSpacesFixer::class)
         ->call('configure', [
             [
-                'align_double_arrow' => true,
+                'operators' => [
+                    '='  => 'single_space',
+                    '=>' => 'align',
+                ]
             ]
         ]);
     $services->set(Fixer\Operator\IncrementStyleFixer::class)
@@ -68,7 +71,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(Fixer\ClassNotation\ClassAttributesSeparationFixer::class)
         ->call('configure', [
             [
-                'elements' => ['method'],
+                'elements' => [
+                    'const'        => 'none',
+                    'method'       => 'one',
+                    'property'     => 'none',
+                    'trait_import' => 'none'
+                ],
             ]
         ]);
 
@@ -126,7 +134,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(Fixer\ClassNotation\ClassDefinitionFixer::class)
         ->call('configure', [
             [
-                'singleLine' => true,
+                'single_line' => true,
             ]
         ]);
 
@@ -145,8 +153,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(Fixer\NamespaceNotation\SingleBlankLineBeforeNamespaceFixer::class);
     $services->set(Fixer\ClassNotation\SingleClassElementPerStatementFixer::class);
 
+    # new since PHP-CS-Fixer 2.6
     $services->set(Fixer\ClassNotation\NoUnneededFinalMethodFixer::class);
     $services->set(Fixer\Semicolon\SemicolonAfterInstructionFixer::class);
 
+    # new since 2.11
     $services->set(Fixer\Operator\StandardizeIncrementFixer::class);
 };

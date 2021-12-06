@@ -13,78 +13,45 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchOutputChannel implements OutputChannelInterface
 {
-    /**
-     * @var ClientBuilderInterface
-     */
-    protected $clientBuilder;
+    protected array $options;
+    protected ClientBuilderInterface $clientBuilder;
+    protected OutputChannelContextInterface $outputChannelContext;
+    protected OutputChannelModifierEventDispatcher $eventDispatcher;
 
-    /**
-     * @var array
-     */
-    protected $options;
-
-    /**
-     * @var OutputChannelContextInterface
-     */
-    protected $outputChannelContext;
-
-    /**
-     * @var OutputChannelModifierEventDispatcher
-     */
-    protected $eventDispatcher;
-
-    /**
-     * @param ClientBuilderInterface $clientBuilder
-     */
     public function __construct(ClientBuilderInterface $clientBuilder)
     {
         $this->clientBuilder = $clientBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function configureOptions(OptionsResolver $optionsResolver)
+    public static function configureOptions(OptionsResolver $resolver): void
     {
-        $optionsResolver->setRequired([
+        $resolver->setRequired([
             'result_limit'
         ]);
 
-        $optionsResolver->setDefaults([
+        $resolver->setDefaults([
             'result_limit' => 10,
         ]);
 
-        $optionsResolver->setAllowedTypes('result_limit', ['int']);
+        $resolver->setAllowedTypes('result_limit', ['int']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOutputChannelContext(OutputChannelContextInterface $outputChannelContext)
+    public function setOutputChannelContext(OutputChannelContextInterface $outputChannelContext): void
     {
         $this->outputChannelContext = $outputChannelContext;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEventDispatcher(OutputChannelModifierEventDispatcher $eventDispatcher)
+    public function setEventDispatcher(OutputChannelModifierEventDispatcher $eventDispatcher): void
     {
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getQuery()
+    public function getQuery(): mixed
     {
         $queryTerm = $this->outputChannelContext->getRuntimeQueryProvider()->getUserQuery();
 
@@ -109,9 +76,6 @@ class SearchOutputChannel implements OutputChannelInterface
         return $eventData->getParameter('query');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResult(SearchContainerInterface $searchContainer): SearchContainerInterface
     {
         $query = $searchContainer->getQuery();

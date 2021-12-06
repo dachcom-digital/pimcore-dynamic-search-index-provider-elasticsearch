@@ -8,50 +8,23 @@ use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 class IndexPersistenceService
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+    protected Client $client;
+    protected int $bulkCommitSize = 200;
+    protected array $bulkQueries = [];
+    protected array $indexOptions = [];
 
-    /**
-     * @var int
-     */
-    protected $bulkCommitSize = 200;
-
-    /**
-     * @var array
-     */
-    protected $bulkQueries = [];
-
-    /**
-     * @var array
-     */
-    protected $indexOptions = [];
-
-    /**
-     * @param Client $client
-     * @param array  $indexOptions
-     */
     public function __construct(Client $client, array $indexOptions)
     {
         $this->client = $client;
         $this->indexOptions = $indexOptions;
     }
 
-    /**
-     * @return int
-     */
-    public function getBulkCommitSize()
+    public function getBulkCommitSize(): int
     {
         return $this->bulkCommitSize;
     }
 
-    /**
-     * @param int $bulkCommitSize
-     *
-     * @return $this
-     */
-    public function setBulkCommitSize(int $bulkCommitSize)
+    public function setBulkCommitSize(int $bulkCommitSize): static
     {
         $this->bulkCommitSize = $bulkCommitSize;
 
@@ -59,13 +32,9 @@ class IndexPersistenceService
     }
 
     /**
-     * @param IndexDocument $indexDocument
-     *
-     * @return array
-     *
      * @throws \Exception
      */
-    public function createIndex(?IndexDocument $indexDocument = null)
+    public function createIndex(?IndexDocument $indexDocument = null): array
     {
         $analysis = [];
         $settings = $this->indexOptions['index']['settings'];
@@ -101,10 +70,7 @@ class IndexPersistenceService
         return $this->client->indices()->create($indexParams);
     }
 
-    /**
-     * @return array
-     */
-    public function dropIndex()
+    public function dropIndex(): array
     {
         $indexName = $this->getIndexName();
 
@@ -116,29 +82,17 @@ class IndexPersistenceService
         return $this->client->indices()->delete(['index' => $indexName]);
     }
 
-    /**
-     * @return bool
-     */
-    public function indexExists()
+    public function indexExists(): bool
     {
         return $this->client->indices()->exists(['index' => $this->getIndexName()]);
     }
 
-    /**
-     * @return array
-     */
-    public function clearCache()
+    public function clearCache(): array
     {
         return $this->client->indices()->clearCache(['index' => $this->getIndexName()]);
     }
 
-    /**
-     * @param string|int $id
-     * @param array      $params
-     *
-     * @return bool
-     */
-    public function has($id, array $params = [])
+    public function has(mixed $id, array $params = []): bool
     {
         $requestParams = [
             'index' => $this->getIndexName(),
@@ -160,13 +114,7 @@ class IndexPersistenceService
         return isset($result['_id']) && !empty($result['_id']);
     }
 
-    /**
-     * @param mixed $id
-     * @param null  $routing
-     *
-     * @return array|callable
-     */
-    public function remove($id, $routing = null)
+    public function remove(mixed $id, ?string $routing = null): array
     {
         $params = [
             'index' => $this->getIndexName(),
@@ -180,15 +128,7 @@ class IndexPersistenceService
         return $this->client->delete($params);
     }
 
-    /**
-     * @param mixed         $id
-     * @param IndexDocument $document
-     * @param null          $script
-     * @param array         $params
-     *
-     * @return array|callable
-     */
-    public function update($id, IndexDocument $document, $script = null, array $params = [])
+    public function update(mixed $id, IndexDocument $document, mixed $script = null, array $params = []): array
     {
         $fields = $this->getIndexDocumentFields($document);
 
@@ -211,12 +151,7 @@ class IndexPersistenceService
         return $this->client->update($params);
     }
 
-    /**
-     * @param IndexDocument $document
-     *
-     * @throws \Exception
-     */
-    public function persist(IndexDocument $document)
+    public function persist(IndexDocument $document): void
     {
         $body = [];
         $body['_id'] = $document->getDocumentId();
@@ -227,13 +162,9 @@ class IndexPersistenceService
     }
 
     /**
-     * @param string $operation
-     * @param array  $data
-     *
-     * @return array
      * @throws \Exception
      */
-    public function bulk(string $operation, array $data = [])
+    public function bulk(string $operation, array $data = []): array
     {
         $bulkParams = [
             '_id' => $data['_id'] ?? null,
@@ -255,13 +186,9 @@ class IndexPersistenceService
     }
 
     /**
-     * @param string $commitMode
-     * @param array  $params
-     *
-     * @return array|callable
      * @throws \Exception
      */
-    public function commit($commitMode = 'refresh', array $params = [])
+    public function commit(string $commitMode = 'refresh', array $params = []): array
     {
         $bulkResponse = [];
 
@@ -300,45 +227,27 @@ class IndexPersistenceService
         return $bulkResponse;
     }
 
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function flush(array $params = [])
+    public function flush(array $params = []): array
     {
         return $this->client->indices()->flush(array_merge(['index' => $this->getIndexName()], $params));
     }
 
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function refresh(array $params = [])
+    public function refresh(array $params = []): array
     {
         return $this->client->indices()->refresh(array_merge(['index' => $this->getIndexName()], $params));
     }
 
-    public function clearElasticIndexCache()
+    public function clearElasticIndexCache(): array
     {
         return $this->client->indices()->clearCache(['index' => $this->getIndexName()]);
     }
 
-    /**
-     * @return string
-     */
-    protected function getIndexName()
+    protected function getIndexName(): string
     {
         return $this->indexOptions['index']['identifier'];
     }
 
-    /**
-     * @param IndexDocument $document
-     *
-     * @return array
-     */
-    protected function getIndexDocumentFields(IndexDocument $document)
+    protected function getIndexDocumentFields(IndexDocument $document): array
     {
         $fields = [];
         foreach ($document->getIndexFields() as $field) {
@@ -356,12 +265,9 @@ class IndexPersistenceService
     }
 
     /**
-     * @param IndexDocument $indexDocument
-     *
-     * @return array|null
      * @throws \Exception
      */
-    protected function parseMappings(IndexDocument $indexDocument)
+    protected function parseMappings(IndexDocument $indexDocument): ?array
     {
         $mappings = [];
         $hasDynamicFields = false;

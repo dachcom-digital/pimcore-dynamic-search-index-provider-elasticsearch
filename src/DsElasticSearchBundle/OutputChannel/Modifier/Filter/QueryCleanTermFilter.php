@@ -7,10 +7,7 @@ use DynamicSearchBundle\OutputChannel\Modifier\OutputChannelModifierFilterInterf
 
 class QueryCleanTermFilter implements OutputChannelModifierFilterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function dispatchFilter(OutputChannelAllocatorInterface $outputChannelAllocator, array $options)
+    public function dispatchFilter(OutputChannelAllocatorInterface $outputChannelAllocator, array $options): string
     {
         return trim(
             preg_replace(

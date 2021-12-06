@@ -3,26 +3,18 @@
 namespace DsElasticSearchBundle\Builder;
 
 use DynamicSearchBundle\Logger\LoggerInterface;
+use Elasticsearch\Client;
 
 class ClientBuilder implements ClientBuilderInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function build(array $indexOptions)
+    public function build(array $indexOptions): Client
     {
         $client = \Elasticsearch\ClientBuilder::create();
         $client->setHosts($indexOptions['index']['hosts']);

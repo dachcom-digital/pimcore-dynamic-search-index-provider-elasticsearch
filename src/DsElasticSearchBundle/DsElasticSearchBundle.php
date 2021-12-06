@@ -8,19 +8,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class DsElasticSearchBundle extends Bundle implements ProviderBundleInterface
 {
-    const PROVIDER_NAME = 'elasticsearch';
+    public const PROVIDER_NAME = 'elasticsearch';
 
-    /**
-     * @param ContainerBuilder $container
-     */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProviderName(): string
     {
         return self::PROVIDER_NAME;

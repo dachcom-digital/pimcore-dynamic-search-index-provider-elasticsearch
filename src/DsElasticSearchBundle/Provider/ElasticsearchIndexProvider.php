@@ -15,30 +15,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfiguredIndexProviderInterface
 {
-    /**
-     * @var ClientBuilderInterface
-     */
-    protected $clientBuilder;
+    protected ClientBuilderInterface $clientBuilder;
+    protected LoggerInterface $logger;
+    protected array $options;
+    protected IndexPersistenceService $indexService;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var array
-     */
-    protected $options;
-
-    /**
-     * @var IndexPersistenceService
-     */
-    protected $indexService;
-
-    /**
-     * @param ClientBuilderInterface $clientBuilder
-     * @param LoggerInterface        $logger
-     */
     public function __construct(
         ClientBuilderInterface $clientBuilder,
         LoggerInterface $logger
@@ -47,10 +28,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function configureOptions(OptionsResolver $resolver)
+    public static function configureOptions(OptionsResolver $resolver): void
     {
         $defaults = [
             'index'    => function (OptionsResolver $spoolResolver) {
@@ -99,18 +77,12 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         $resolver->setAllowedTypes('analysis', ['array']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function preConfigureIndex(IndexDocument $indexDocument)
+    public function preConfigureIndex(IndexDocument $indexDocument): void
     {
         $client = $this->clientBuilder->build($this->options);
 
@@ -129,10 +101,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function warmUp(ContextDefinitionInterface $contextDefinition)
+    public function warmUp(ContextDefinitionInterface $contextDefinition): void
     {
         $client = $this->clientBuilder->build($this->options);
 
@@ -149,10 +118,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function coolDown(ContextDefinitionInterface $contextDefinition)
+    public function coolDown(ContextDefinitionInterface $contextDefinition): void
     {
         // commit index stack
         if ($contextDefinition->getContextDispatchType() !== ContextDefinitionInterface::CONTEXT_DISPATCH_TYPE_INDEX) {
@@ -172,26 +138,17 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function cancelledShutdown(ContextDefinitionInterface $contextDefinition)
+    public function cancelledShutdown(ContextDefinitionInterface $contextDefinition): void
     {
         // @todo required?
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function emergencyShutdown(ContextDefinitionInterface $contextDefinition)
+    public function emergencyShutdown(ContextDefinitionInterface $contextDefinition): void
     {
         // @todo required?
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function processDocument(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
+    public function processDocument(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument): void
     {
         try {
             switch ($contextDefinition->getContextDispatchType()) {
@@ -217,13 +174,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         }
     }
 
-    /**
-     * @param ContextDefinitionInterface $contextDefinition
-     * @param IndexDocument              $indexDocument
-     *
-     * @throws ProviderException
-     */
-    protected function executeIndex(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
+    protected function executeIndex(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument): void
     {
         if (!$indexDocument->hasIndexFields()) {
             return;
@@ -242,13 +193,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         );
     }
 
-    /**
-     * @param ContextDefinitionInterface $contextDefinition
-     * @param IndexDocument              $indexDocument
-     *
-     * @throws ProviderException
-     */
-    protected function executeInsert(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
+    protected function executeInsert(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument): void
     {
         if (!$this->indexService->indexExists()) {
             $this->logger->error(
@@ -274,13 +219,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         );
     }
 
-    /**
-     * @param ContextDefinitionInterface $contextDefinition
-     * @param IndexDocument              $indexDocument
-     *
-     * @throws ProviderException
-     */
-    protected function executeUpdate(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
+    protected function executeUpdate(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument): void
     {
         if (!$this->indexService->indexExists()) {
             $this->logger->error(
@@ -318,11 +257,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         );
     }
 
-    /**
-     * @param ContextDefinitionInterface $contextDefinition
-     * @param IndexDocument              $indexDocument
-     */
-    protected function executeDelete(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument)
+    protected function executeDelete(ContextDefinitionInterface $contextDefinition, IndexDocument $indexDocument): void
     {
         if (!$this->indexService->indexExists()) {
             $this->logger->error(
@@ -353,12 +288,7 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
         );
     }
 
-    /**
-     * @param IndexDocument $indexDocument
-     *
-     * @return string|null
-     */
-    protected function getLocaleFromIndexDocumentResource(IndexDocument $indexDocument)
+    protected function getLocaleFromIndexDocumentResource(IndexDocument $indexDocument): ?string
     {
         $locale = null;
         $normalizerOptions = $indexDocument->getResourceMeta()->getNormalizerOptions();

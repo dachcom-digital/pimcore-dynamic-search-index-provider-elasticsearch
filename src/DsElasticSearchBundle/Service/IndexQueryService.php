@@ -7,41 +7,21 @@ use ONGR\ElasticsearchDSL\Search;
 
 class IndexQueryService
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+    protected Client $client;
+    protected array $indexOptions;
 
-    /**
-     * @var array
-     */
-    protected $indexOptions;
-
-    /**
-     * @param Client $client
-     * @param array  $indexOptions
-     */
     public function __construct(Client $client, array $indexOptions)
     {
         $this->client = $client;
         $this->indexOptions = $indexOptions;
     }
 
-    /**
-     * @return Search
-     */
-    public function createSearch()
+    public function createSearch(): Search
     {
         return new Search();
     }
 
-    /**
-     * @param array $query
-     * @param array $params
-     *
-     * @return array|callable
-     */
-    public function search(array $query, array $params = [])
+    public function search(array $query, array $params = []): array
     {
         $requestParams = [
             'index' => $this->getIndexName(),
@@ -55,10 +35,7 @@ class IndexQueryService
         return $this->client->search($requestParams);
     }
 
-    /**
-     * @return int
-     */
-    public function getIndexDocumentCount()
+    public function getIndexDocumentCount(): int
     {
         $body = [
             'index' => $this->getIndexName(),
@@ -70,18 +47,12 @@ class IndexQueryService
         return $results['count'];
     }
 
-    /**
-     * @return array
-     */
-    public function clearCache()
+    public function clearCache(): array
     {
         return $this->client->indices()->clearCache(['index' => $this->getIndexName()]);
     }
 
-    /**
-     * @return string
-     */
-    protected function getIndexName()
+    protected function getIndexName(): string
     {
         return $this->indexOptions['index']['identifier'];
     }
