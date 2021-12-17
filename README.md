@@ -24,7 +24,7 @@ Store data with the elasticsearch index service.
 }
 ```
 
-# Dynamic Search Bundle
+### Dynamic Search Bundle
 You need to install / enable the Dynamic Search Bundle first.
 Read more about it [here](https://github.com/dachcom-digital/pimcore-dynamic-search#installation).
 After that, proceed as followed:
