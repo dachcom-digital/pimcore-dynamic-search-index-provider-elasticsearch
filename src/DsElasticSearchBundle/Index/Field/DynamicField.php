@@ -4,10 +4,7 @@ namespace DsElasticSearchBundle\Index\Field;
 
 final class DynamicField extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function build(string $name, $data, array $configuration = [])
+    public function build(string $name, mixed $data, array $configuration = []): array
     {
         return [
             'definition' => null,

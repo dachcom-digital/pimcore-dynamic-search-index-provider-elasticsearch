@@ -14,32 +14,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AggregationFilter implements FilterInterface
 {
-    const VIEW_TEMPLATE_PATH = '@DsElasticSearch/OutputChannel/Filter';
+    public const VIEW_TEMPLATE_PATH = '@DsElasticSearch/output-channel/filter';
 
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options;
+    protected string $name;
+    protected OutputChannelContextInterface $outputChannelContext;
+    protected OutputChannelModifierEventDispatcher $eventDispatcher;
 
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var OutputChannelContextInterface
-     */
-    protected $outputChannelContext;
-
-    /**
-     * @var OutputChannelModifierEventDispatcher
-     */
-    protected $eventDispatcher;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired(['label', 'show_in_frontend', 'add_as_post_filter', 'multiple', 'relation_label', 'field', 'query_type']);
         $resolver->setAllowedTypes('show_in_frontend', ['bool']);
@@ -61,50 +43,32 @@ class AggregationFilter implements FilterInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEventDispatcher(OutputChannelModifierEventDispatcher $eventDispatcher)
+    public function setEventDispatcher(OutputChannelModifierEventDispatcher $eventDispatcher): void
     {
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOutputChannelContext(OutputChannelContextInterface $outputChannelContext)
+    public function setOutputChannelContext(OutputChannelContextInterface $outputChannelContext): void
     {
         $this->outputChannelContext = $outputChannelContext;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsFrontendView(): bool
     {
         return $this->options['show_in_frontend'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function enrichQuery($query)
+    public function enrichQuery($query): mixed
     {
         if (!$query instanceof Search) {
             return $query;
@@ -120,19 +84,14 @@ class AggregationFilter implements FilterInterface
 
         return $query;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function findFilterValueInResult(RawResultInterface $rawResult)
+
+    public function findFilterValueInResult(RawResultInterface $rawResult): mixed
     {
         // not supported?
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildViewVars(RawResultInterface $rawResult, $filterValues, $query)
+    public function buildViewVars(RawResultInterface $rawResult, $filterValues, $query): ?array
     {
         $response = $rawResult->getParameter('fullDatabaseResponse');
 
@@ -152,11 +111,7 @@ class AggregationFilter implements FilterInterface
         return $viewVars;
     }
 
-    /**
-     * @param Search $query
-     * @param array  $queryFields
-     */
-    protected function addQueryFilter(Search $query, array $queryFields)
+    protected function addQueryFilter(Search $query, array $queryFields): void
     {
         if (count($queryFields) === 0) {
             return;
@@ -170,7 +125,9 @@ class AggregationFilter implements FilterInterface
 
             if ($this->options['multiple'] === true && !is_array($value)) {
                 continue;
-            } elseif ($this->options['multiple'] === false && is_array($value)) {
+            }
+
+            if ($this->options['multiple'] === false && is_array($value)) {
                 continue;
             }
 
@@ -191,12 +148,7 @@ class AggregationFilter implements FilterInterface
         }
     }
 
-    /**
-     * @param array $buckets
-     *
-     * @return array
-     */
-    protected function buildResultArray(array $buckets)
+    protected function buildResultArray(array $buckets): array
     {
         $runtimeOptions = $this->outputChannelContext->getRuntimeOptions();
         $queryFields = $runtimeOptions['request_query_vars'];
@@ -217,7 +169,7 @@ class AggregationFilter implements FilterInterface
             $active = false;
             if (isset($queryFields[$fieldName])) {
                 if ($this->options['multiple'] === true) {
-                    $active = in_array($bucket['key'], $queryFields[$fieldName]);
+                    $active = in_array($bucket['key'], $queryFields[$fieldName], true);
                 } else {
                     $active = $bucket['key'] === $queryFields[$fieldName];
                 }

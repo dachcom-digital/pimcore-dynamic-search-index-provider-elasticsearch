@@ -9,4 +9,4 @@ services:
         arguments:
             $dsFullConfiguration: '%dynamic_search.context.full_configuration%'
         tags:
-            - { name: console.command, command: 'dynamic-search:es:rebuild-index-mapping' }
+            - { name: console.command}

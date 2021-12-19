@@ -16,32 +16,15 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class RebuildIndexCommand extends Command
 {
-    /**
-     * @var array
-     */
-    protected $dsFullConfiguration;
+    protected static $defaultName = 'dynamic-search:es:rebuild-index-mapping';
+    protected static $defaultDescription = 'Rebuild Index Mapping';
 
-    /**
-     * @var ContextDefinitionBuilderInterface
-     */
-    protected $contextDefinitionBuilder;
+    protected array $dsFullConfiguration;
+    protected ContextDefinitionBuilderInterface $contextDefinitionBuilder;
+    protected IndexDocumentGeneratorInterface $indexDocumentGenerator;
 
-    /**
-     * @var IndexDocumentGeneratorInterface
-     */
-    protected $indexDocumentGenerator;
+    protected ClientBuilderInterface $clientBuilder;
 
-    /**
-     * @var ClientBuilderInterface
-     */
-    protected $clientBuilder;
-
-    /**
-     * @param array                             $dsFullConfiguration
-     * @param ContextDefinitionBuilderInterface $contextDefinitionBuilder
-     * @param IndexDocumentGeneratorInterface   $indexDocumentGenerator
-     * @param ClientBuilderInterface            $clientBuilder
-     */
     public function __construct(
         array $dsFullConfiguration,
         ContextDefinitionBuilderInterface $contextDefinitionBuilder,
@@ -56,21 +39,12 @@ class RebuildIndexCommand extends Command
         $this->clientBuilder = $clientBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
-        $this
-            ->setName('dynamic-search:es:rebuild-index-mapping')
-            ->setDescription('Rebuild Index Mapping')
-            ->addOption('context', 'c', InputOption::VALUE_REQUIRED, 'Context name');
+        $this->addOption('context', 'c', InputOption::VALUE_REQUIRED, 'Context name');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $contextName = $input->getOption('context');
 

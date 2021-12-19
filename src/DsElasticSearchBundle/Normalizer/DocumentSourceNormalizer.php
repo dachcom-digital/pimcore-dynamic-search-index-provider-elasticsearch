@@ -10,31 +10,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DocumentSourceNormalizer implements DocumentNormalizerInterface
 {
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function configureOptions(OptionsResolver $resolver)
+    public static function configureOptions(OptionsResolver $resolver): void
     {
-
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(RawResultInterface $rawResult, ContextDefinitionInterface $contextDefinition, string $outputChannelName)
+    public function normalize(RawResultInterface $rawResult, ContextDefinitionInterface $contextDefinition, string $outputChannelName): array
     {
         $data = $rawResult->getData();
 

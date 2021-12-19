@@ -4,10 +4,7 @@ namespace DsElasticSearchBundle\Index\Field;
 
 final class ExplicitField extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function build(string $name, $data, array $configuration = [])
+    public function build(string $name, mixed $data, array $configuration = []): array
     {
         return [
             'definition' => $configuration,
