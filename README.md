@@ -187,3 +187,12 @@ Use this command to rebuild a index by passing your context name with argument `
 ```bash
 $  bin/console dynamic-search:es:rebuild-index -c default
 ```
+
+***
+
+## Copyright and License
+Copyright: [DACHCOM.DIGITAL](http://dachcom-digital.com)  
+For licensing details please visit [LICENSE.md](./LICENSE.md)
+
+## Upgrade Info
+Before updating, please [check our upgrade notes!](./UPGRADE.md)  
