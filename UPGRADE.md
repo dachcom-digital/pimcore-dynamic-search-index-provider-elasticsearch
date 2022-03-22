@@ -1,5 +1,8 @@
 # Upgrade Notes
 
+### 2.0.2
+- [FEATURE] template improvements for aggreagtion filter [#10](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/issues/10)
+
 ### 2.0.1
 - [BUGFIX] Fix field for filter's term query [#7](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/issues/7)
 
