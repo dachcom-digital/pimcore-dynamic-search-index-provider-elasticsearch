@@ -179,7 +179,7 @@ class AggregationFilter implements FilterInterface
             $boolQuery = new BoolQuery();
 
             foreach ($value as $relationValue) {
-                $relationQuery = new TermQuery($this->name, $relationValue);
+                $relationQuery = new TermQuery($this->options['field'], $relationValue);
                 $boolQuery->add($relationQuery, $this->options['query_type']);
             }
 
