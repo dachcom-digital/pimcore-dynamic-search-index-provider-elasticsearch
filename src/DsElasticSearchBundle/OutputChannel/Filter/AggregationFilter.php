@@ -96,7 +96,8 @@ class AggregationFilter implements FilterInterface
         $response = $rawResult->getParameter('fullDatabaseResponse');
 
         $viewVars = [
-            'template' => sprintf('%s/aggregation.html.twig', self::VIEW_TEMPLATE_PATH),
+            'name' => $this->name,
+            'template' => [sprintf('%s/%s.html.twig', self::VIEW_TEMPLATE_PATH, $this->name), sprintf('%s/aggregation.html.twig', self::VIEW_TEMPLATE_PATH)],
             'label'    => $this->options['label'],
             'multiple' => $this->options['multiple'],
             'values'   => [],
