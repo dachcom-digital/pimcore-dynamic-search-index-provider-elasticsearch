@@ -162,7 +162,7 @@ class AggregationFilter implements FilterInterface
 
             $relationLabel = null;
             if ($this->options['relation_label'] !== null) {
-                $relationLabel = call_user_func($this->options['relation_label'], $bucket['key']);
+                $relationLabel = call_user_func($this->options['relation_label'], $bucket['key'], $queryFields['locale'] ?? null);
             } else {
                 $relationLabel = $bucket['key'];
             }
