@@ -8,3 +8,7 @@ services:
     DsElasticSearchBundle\OutputChannel\Filter\AggregationFilter:
         tags:
             - { name: dynamic_search.index.filter, identifier: aggregation, index_provider: elasticsearch }
+
+    DsElasticSearchBundle\OutputChannel\Filter\CompositeAggregationFilter:
+        tags:
+            - { name: dynamic_search.index.filter, identifier: composite_aggregation, index_provider: elasticsearch }
