@@ -1,0 +1,15 @@
+<div class="card">
+    {% if label is not null %}
+        <h5>{{ label|trans }}</h5>
+    {% endif %}
+    <div class="card-body">
+        <div class="input-group">
+            <input type="text" class="form-control" name="{{ form_name }}" />
+            <select name="{{ distance_form_name }}" class="form-control">
+                {% for distance in distance_range %}
+                    <option value="{{ distance }}">{{ distance ~ distance_unit }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
