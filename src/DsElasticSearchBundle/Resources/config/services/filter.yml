@@ -12,3 +12,7 @@ services:
     DsElasticSearchBundle\OutputChannel\Filter\CompositeAggregationFilter:
         tags:
             - { name: dynamic_search.index.filter, identifier: composite_aggregation, index_provider: elasticsearch }
+
+    DsElasticSearchBundle\OutputChannel\Filter\RangeAggregationFilter:
+        tags:
+            - { name: dynamic_search.index.filter, identifier: range_aggregation, index_provider: elasticsearch }
