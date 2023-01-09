@@ -109,9 +109,9 @@ class CompositeAggregationFilter extends AggregationFilter implements FilterInte
         
         $values = [];
         foreach ($buckets as $bucket) {
-            
-            $bucketValue = implode($this->options['separator'], array_values($bucket['key']));
-            
+    
+            $bucketValue = rtrim(implode($this->options['separator'], array_values($bucket['key'])), $this->options['separator']);
+    
             $relationLabel = null;
             if ($this->options['relation_label'] !== null) {
                 $relationLabel = call_user_func($this->options['relation_label'], $bucketValue, $queryFields['locale'] ?? null);
