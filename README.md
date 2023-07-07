@@ -5,6 +5,7 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/.github/workflows/codeception.yml?branch=master&style=flat-square&logo=github&label=codeception)](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/actions?query=workflow%3ACodeception+branch%3Amaster)
 [![PhpStan](https://img.shields.io/github/actions/workflow/status/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/.github/workflows/php-stan.yml?branch=master&style=flat-square&logo=github&label=phpstan%20level%204)](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/actions?query=workflow%3A"PHP+Stan"+branch%3Amaster)
 
+
 An index storage extension for [Pimcore Dynamic Search](https://github.com/dachcom-digital/pimcore-dynamic-search). 
 Store data with the elasticsearch index service.
 
