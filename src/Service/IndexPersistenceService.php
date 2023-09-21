@@ -8,15 +8,11 @@ use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 class IndexPersistenceService
 {
-    protected Client $client;
     protected int $bulkCommitSize = 200;
     protected array $bulkQueries = [];
-    protected array $indexOptions = [];
 
-    public function __construct(Client $client, array $indexOptions)
+    public function __construct(protected Client $client, protected array $indexOptions = [])
     {
-        $this->client = $client;
-        $this->indexOptions = $indexOptions;
     }
 
     public function getBulkCommitSize(): int

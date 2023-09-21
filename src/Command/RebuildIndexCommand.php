@@ -9,6 +9,7 @@ use DynamicSearchBundle\Context\ContextDefinitionInterface;
 use DynamicSearchBundle\Generator\IndexDocumentGeneratorInterface;
 use DynamicSearchBundle\Provider\PreConfiguredIndexProviderInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,24 +20,13 @@ class RebuildIndexCommand extends Command
     protected static $defaultName = 'dynamic-search:es:rebuild-index-mapping';
     protected static $defaultDescription = 'Rebuild Index Mapping';
 
-    protected array $dsFullConfiguration;
-    protected ContextDefinitionBuilderInterface $contextDefinitionBuilder;
-    protected IndexDocumentGeneratorInterface $indexDocumentGenerator;
-
-    protected ClientBuilderInterface $clientBuilder;
-
     public function __construct(
-        array $dsFullConfiguration,
-        ContextDefinitionBuilderInterface $contextDefinitionBuilder,
-        IndexDocumentGeneratorInterface $indexDocumentGenerator,
-        ClientBuilderInterface $clientBuilder
+        protected array $dsFullConfiguration,
+        protected ContextDefinitionBuilderInterface $contextDefinitionBuilder,
+        protected IndexDocumentGeneratorInterface $indexDocumentGenerator,
+        protected ClientBuilderInterface $clientBuilder
     ) {
         parent::__construct();
-
-        $this->dsFullConfiguration = $dsFullConfiguration;
-        $this->contextDefinitionBuilder = $contextDefinitionBuilder;
-        $this->indexDocumentGenerator = $indexDocumentGenerator;
-        $this->clientBuilder = $clientBuilder;
     }
 
     protected function configure(): void
@@ -90,7 +80,10 @@ class RebuildIndexCommand extends Command
         $indexService = new IndexPersistenceService($client, $options);
 
         if ($indexService->indexExists()) {
+
+            /** @var QuestionHelper $helper */
             $helper = $this->getHelper('question');
+
             $text = 'This command will drop the selected index and all data will be lost! Continue?';
             $commandText = sprintf(' <info>%s (y/n)</info> [<comment>%s</comment>]:', $text, 'no');
             $question = new ConfirmationQuestion($commandText, false);

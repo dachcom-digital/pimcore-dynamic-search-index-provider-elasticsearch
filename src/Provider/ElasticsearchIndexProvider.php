@@ -15,17 +15,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfiguredIndexProviderInterface
 {
-    protected ClientBuilderInterface $clientBuilder;
-    protected LoggerInterface $logger;
     protected array $options;
     protected IndexPersistenceService $indexService;
 
     public function __construct(
-        ClientBuilderInterface $clientBuilder,
-        LoggerInterface $logger
+        protected ClientBuilderInterface $clientBuilder,
+        protected LoggerInterface $logger
     ) {
-        $this->clientBuilder = $clientBuilder;
-        $this->logger = $logger;
     }
 
     public static function configureOptions(OptionsResolver $resolver): void

@@ -7,11 +7,8 @@ use Elasticsearch\Client;
 
 class ClientBuilder implements ClientBuilderInterface
 {
-    protected LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(protected LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function build(array $indexOptions): Client
