@@ -19,24 +19,13 @@ class RebuildIndexCommand extends Command
     protected static $defaultName = 'dynamic-search:es:rebuild-index-mapping';
     protected static $defaultDescription = 'Rebuild Index Mapping';
 
-    protected array $dsFullConfiguration;
-    protected ContextDefinitionBuilderInterface $contextDefinitionBuilder;
-    protected IndexDocumentGeneratorInterface $indexDocumentGenerator;
-
-    protected ClientBuilderInterface $clientBuilder;
-
     public function __construct(
-        array $dsFullConfiguration,
-        ContextDefinitionBuilderInterface $contextDefinitionBuilder,
-        IndexDocumentGeneratorInterface $indexDocumentGenerator,
-        ClientBuilderInterface $clientBuilder
+        protected array $dsFullConfiguration,
+        protected ContextDefinitionBuilderInterface $contextDefinitionBuilder,
+        protected IndexDocumentGeneratorInterface $indexDocumentGenerator,
+        protected ClientBuilderInterface $clientBuilder
     ) {
         parent::__construct();
-
-        $this->dsFullConfiguration = $dsFullConfiguration;
-        $this->contextDefinitionBuilder = $contextDefinitionBuilder;
-        $this->indexDocumentGenerator = $indexDocumentGenerator;
-        $this->clientBuilder = $clientBuilder;
     }
 
     protected function configure(): void

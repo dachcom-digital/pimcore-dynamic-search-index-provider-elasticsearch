@@ -7,13 +7,8 @@ use ONGR\ElasticsearchDSL\Search;
 
 class IndexQueryService
 {
-    protected Client $client;
-    protected array $indexOptions;
-
-    public function __construct(Client $client, array $indexOptions)
+    public function __construct(protected Client $client, protected array $indexOptions)
     {
-        $this->client = $client;
-        $this->indexOptions = $indexOptions;
     }
 
     public function createSearch(): Search

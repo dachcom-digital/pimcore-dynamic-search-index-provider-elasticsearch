@@ -12,7 +12,8 @@ Store data with the elasticsearch index service.
 ## Release Plan
 | Release | Supported Pimcore Versions | Supported Symfony Versions | Release Date | Maintained           | Branch                                                                                                 |
 |---------|----------------------------|----------------------------|--------------|----------------------|--------------------------------------------------------------------------------------------------------|
-| **2.x** | `10.0` - `10.6`            | `^5.4`                     | 19.12.2021   | Yes (Bugs, Features) | master                                                                                                 |
+| **3.x** | `11.0`                     | `^6.2`                     | --           | Yes (Bugs, Features) | master                                                                                                 |
+| **2.x** | `10.0` - `10.6`            | `^5.4`                     | 19.12.2021   | No                   | [2.x](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/tree/2.x) |
 | **1.x** | `6.6` - `6.9`              | `^4.4`                     | 18.04.2021   | No                   | [1.x](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/tree/1.x) |
 
 ***
@@ -20,8 +21,8 @@ Store data with the elasticsearch index service.
 ## Installation  
 ```json
 "require" : {
-    "dachcom-digital/dynamic-search" : "~2.0.0",
-    "dachcom-digital/dynamic-search-index-provider-elasticsearch" : "~2.0.0"
+    "dachcom-digital/dynamic-search" : "~3.0.0",
+    "dachcom-digital/dynamic-search-index-provider-elasticsearch" : "~3.0.0"
 }
 ```
 
@@ -30,30 +31,13 @@ You need to install / enable the Dynamic Search Bundle first.
 Read more about it [here](https://github.com/dachcom-digital/pimcore-dynamic-search#installation).
 After that, proceed as followed:
 
-### Enabling via `config/bundles.php`:
+Add Bundle to `bundles.php`:
 ```php
 <?php
 
 return [
     \DsElasticSearchBundle\DsElasticSearchBundle::class => ['all' => true],
 ];
-```
-
-### Enabling via `Kernel.php`:
-```php
-<?php
-
-namespace App;
-
-use Pimcore\HttpKernel\BundleCollection\BundleCollection;
-
-class Kernel extends \Pimcore\Kernel
-{
-    public function registerBundlesToCollection(BundleCollection $collection): void
-    {
-        $collection->addBundle(new \DsElasticSearchBundle\DsElasticSearchBundle());
-    }
-}
 ```
 
 ***
@@ -122,20 +106,20 @@ dynamic_search:
 
 ## Provider Options
 
-| Name                                 | Default Value          | Description |
-|:-------------------------------------|:-----------------------|:------------|
-|`index`                               | []                     |             |
-|`analysis`                            | []                     |             |
+| Name       | Default Value | Description |
+|:-----------|:--------------|:------------|
+| `index`    | []            |             |
+| `analysis` | []            |             |
 
 ***
 
 ## Index Fields
 **Available Index Fields**:   
 
-| Name              | Description |
-|:------------------|:------------|
-|`dynamic`           | TBD |
-|`explicit`          | TBD |
+| Name       | Description |
+|:-----------|:------------|
+| `dynamic`  | TBD         |
+| `explicit` | TBD         |
 
 ***
 
@@ -148,9 +132,9 @@ You're able to modify the search by hooking via `dynamic_search.output_channel.m
 **Identifier**: `elasticsearch_search`   
 **Available Options**:   
 
-| Name                             | Default Value | Description |
-|:---------------------------------|:--------------|:------------|
-|`result_limit`                    | 10            |             |
+| Name           | Default Value | Description |
+|:---------------|:--------------|:------------|
+| `result_limit` | 10            |             |
 
 ### Multi Search
 **Identifier**: `TBD`   
