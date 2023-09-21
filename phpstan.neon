@@ -7,4 +7,4 @@ parameters:
     symfony:
         container_xml_path: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
     ignoreErrors:
-        - '#Access to an undefined property DynamicSearchBundle\\OutputChannel\\Query\\SearchContainerInterface::$result\.#'
+        - '#Access to an undefined property DynamicSearchBundle\\OutputChannel\\Query\\SearchContainerInterface::\$result\.#'
