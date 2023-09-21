@@ -9,6 +9,7 @@ use DynamicSearchBundle\Context\ContextDefinitionInterface;
 use DynamicSearchBundle\Generator\IndexDocumentGeneratorInterface;
 use DynamicSearchBundle\Provider\PreConfiguredIndexProviderInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -79,7 +80,10 @@ class RebuildIndexCommand extends Command
         $indexService = new IndexPersistenceService($client, $options);
 
         if ($indexService->indexExists()) {
+
+            /** @var QuestionHelper $helper */
             $helper = $this->getHelper('question');
+
             $text = 'This command will drop the selected index and all data will be lost! Continue?';
             $commandText = sprintf(' <info>%s (y/n)</info> [<comment>%s</comment>]:', $text, 'no');
             $question = new ConfirmationQuestion($commandText, false);
