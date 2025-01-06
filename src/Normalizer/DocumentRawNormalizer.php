@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace DsElasticSearchBundle\Normalizer;
 
 use DynamicSearchBundle\Context\ContextDefinitionInterface;
@@ -25,6 +36,7 @@ class DocumentRawNormalizer implements DocumentNormalizerInterface
     {
         if ($rawResult->hasParameter('fullDatabaseResponse') === false) {
             $message = sprintf('Parameter "fullDatabaseResponse" is required to normalize raw result but is missing');
+
             throw new NormalizerException($message, __CLASS__);
         }
 

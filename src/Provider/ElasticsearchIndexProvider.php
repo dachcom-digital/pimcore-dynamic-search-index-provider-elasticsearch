@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace DsElasticSearchBundle\Provider;
 
 use DsElasticSearchBundle\Builder\ClientBuilderInterface;
@@ -28,14 +39,12 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
     {
         $defaults = [
             'index'    => function (OptionsResolver $spoolResolver) {
-
                 $spoolResolver->setDefaults([
                     'identifier'            => null,
                     'force_adding_document' => true,
                     'hosts'                 => null,
                     'settings'              => null,
                     'credentials'           => function (OptionsResolver $spoolResolver) {
-
                         $spoolResolver->setDefaults([
                             'username' => null,
                             'password' => null,
@@ -53,7 +62,6 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
                 $spoolResolver->setAllowedTypes('credentials', ['array']);
             },
             'analysis' => function (OptionsResolver $spoolResolver) {
-
                 $spoolResolver->setDefaults([
                     'filter'      => [],
                     'char_filter' => [],
@@ -162,8 +170,10 @@ class ElasticsearchIndexProvider implements IndexProviderInterface, PreConfigure
 
                     break;
                 default:
-                    throw new \Exception(sprintf('invalid context dispatch type "%s". cannot perform index provider dispatch.',
-                        $contextDefinition->getContextDispatchType()));
+                    throw new \Exception(sprintf(
+                        'invalid context dispatch type "%s". cannot perform index provider dispatch.',
+                        $contextDefinition->getContextDispatchType()
+                    ));
             }
         } catch (\Throwable $e) {
             throw new ProviderException($e->getMessage(), DsElasticSearchBundle::PROVIDER_NAME, $e);
