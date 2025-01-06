@@ -5,6 +5,7 @@ parameters:
         - %currentWorkingDirectory%/vendor/pimcore/pimcore/stubs/dynamic-constants.php
     reportUnmatchedIgnoredErrors: false
     symfony:
-        container_xml_path: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
+        containerXmlPath: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
+        constantHassers: false
     ignoreErrors:
         - '#Access to an undefined property DynamicSearchBundle\\OutputChannel\\Query\\SearchContainerInterface::\$result\.#'
