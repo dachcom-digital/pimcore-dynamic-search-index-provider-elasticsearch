@@ -1,6 +1,7 @@
 # Dynamic Search | Index Provider: Elasticsearch
 
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Software License](https://img.shields.io/badge/license-DCL-white.svg?style=flat-square&color=%23ff5c5c)](LICENSE.md)
 [![Latest Release](https://img.shields.io/packagist/v/dachcom-digital/dynamic-search-index-provider-elasticsearch.svg?style=flat-square)](https://packagist.org/packages/dachcom-digital/dynamic-search-index-provider-elasticsearch)
 [![Tests](https://img.shields.io/github/actions/workflow/status/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/.github/workflows/codeception.yml?branch=master&style=flat-square&logo=github&label=codeception)](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/actions?query=workflow%3ACodeception+branch%3Amaster)
 [![PhpStan](https://img.shields.io/github/actions/workflow/status/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/.github/workflows/php-stan.yml?branch=master&style=flat-square&logo=github&label=phpstan%20level%204)](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/actions?query=workflow%3A"PHP+Stan"+branch%3Amaster)
@@ -12,7 +13,7 @@ Store data with the elasticsearch index service.
 ## Release Plan
 | Release | Supported Pimcore Versions | Supported Symfony Versions | Release Date | Maintained     | Branch                                                                                                 |
 |---------|----------------------------|----------------------------|--------------|----------------|--------------------------------------------------------------------------------------------------------|
-| **3.x** | `11.0`                     | `^6.2`                     | 28.09.2023   | Feature Branch | master                                                                                                 |
+| **3.x** | `11.0`                     | `^6.4`                     | 28.09.2023   | Feature Branch | master                                                                                                 |
 | **2.x** | `10.0` - `10.6`            | `^5.4`                     | 19.12.2021   | No             | [2.x](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/tree/2.x) |
 | **1.x** | `6.6` - `6.9`              | `^4.4`                     | 18.04.2021   | No             | [1.x](https://github.com/dachcom-digital/pimcore-dynamic-search-index-provider-elasticsearch/tree/1.x) |
 
@@ -175,12 +176,12 @@ $  bin/console dynamic-search:es:rebuild-index -c default
 
 ***
 
+## Upgrade Info
+Before updating, please [check our upgrade notes!](./UPGRADE.md)  
+
 ## License
 **DACHCOM.DIGITAL AG**, Löwenhofstrasse 15, 9424 Rheineck, Schweiz  
 [dachcom.com](https://www.dachcom.com), dcdi@dachcom.ch  
-Copyright © 2024 DACHCOM.DIGITAL. All rights reserved.  
+Copyright © 2025 DACHCOM.DIGITAL. All rights reserved.  
 
 For licensing details please visit [LICENSE.md](LICENSE.md)  
-
-## Upgrade Info
-Before updating, please [check our upgrade notes!](./UPGRADE.md)  
