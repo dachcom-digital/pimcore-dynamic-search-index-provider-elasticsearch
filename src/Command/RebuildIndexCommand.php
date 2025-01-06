@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace DsElasticSearchBundle\Command;
 
 use DsElasticSearchBundle\Builder\ClientBuilderInterface;
@@ -40,6 +51,7 @@ class RebuildIndexCommand extends Command
 
         if (empty($contextName)) {
             $output->writeln('<error>no context definition name given</error>');
+
             return 0;
         }
 
@@ -47,6 +59,7 @@ class RebuildIndexCommand extends Command
 
         if (!$contextDefinition instanceof ContextDefinitionInterface) {
             $output->writeln(sprintf('<error>no context definition with name "%s" found</error>', $contextName));
+
             return 0;
         }
 
@@ -56,7 +69,8 @@ class RebuildIndexCommand extends Command
             $output->writeln(
                 sprintf(
                     '%s. (The current context index provider also requires pre-configured indices. Please make sure your document definition implements the "%s" interface)',
-                    $e->getMessage(), PreConfiguredIndexProviderInterface::class
+                    $e->getMessage(),
+                    PreConfiguredIndexProviderInterface::class
                 )
             );
 
@@ -80,7 +94,6 @@ class RebuildIndexCommand extends Command
         $indexService = new IndexPersistenceService($client, $options);
 
         if ($indexService->indexExists()) {
-
             /** @var QuestionHelper $helper */
             $helper = $this->getHelper('question');
 
@@ -96,6 +109,7 @@ class RebuildIndexCommand extends Command
                 $indexService->dropIndex();
             } catch (\Throwable $e) {
                 $output->writeln(sprintf('Error while dropping index: %s', $e->getMessage()));
+
                 return 0;
             }
         }
@@ -104,6 +118,7 @@ class RebuildIndexCommand extends Command
             $indexService->createIndex($indexDocument);
         } catch (\Throwable $e) {
             $output->writeln(sprintf('Error while creating index: %s', $e->getMessage()));
+
             return 0;
         }
 

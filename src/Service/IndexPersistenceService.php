@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace DsElasticSearchBundle\Service;
 
 use DynamicSearchBundle\Document\IndexDocument;
@@ -209,12 +220,15 @@ class IndexPersistenceService
         switch ($commitMode) {
             case 'flush':
                 $this->client->indices()->flush();
+
                 break;
             case 'flush_synced':
                 $this->client->indices()->flushSynced();
+
                 break;
             case 'refresh':
                 $this->client->indices()->refresh();
+
                 break;
         }
 
@@ -247,7 +261,6 @@ class IndexPersistenceService
     {
         $fields = [];
         foreach ($document->getIndexFields() as $field) {
-
             $data = $field->getData();
 
             if (!is_array($data)) {
@@ -269,10 +282,10 @@ class IndexPersistenceService
         $hasDynamicFields = false;
 
         foreach ($indexDocument->getIndexFields() as $indexField) {
-
             // fields should be dynamic, do not create mapping
             if ($indexField->getIndexType() === 'dynamic') {
                 $hasDynamicFields = true;
+
                 continue;
             }
 

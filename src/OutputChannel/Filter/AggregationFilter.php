@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace DsElasticSearchBundle\OutputChannel\Filter;
 
 use DynamicSearchBundle\EventDispatcher\OutputChannelModifierEventDispatcher;
@@ -31,7 +42,7 @@ class AggregationFilter implements FilterInterface
         $resolver->setAllowedTypes('relation_label', ['closure', 'null']);
         $resolver->setAllowedTypes('field', ['string']);
         $resolver->setAllowedTypes('query_type', ['string']);
-        
+
         $resolver->setDefaults([
             'query_type'         => BoolQuery::MUST,
             'show_in_frontend'   => true,
@@ -96,7 +107,7 @@ class AggregationFilter implements FilterInterface
         $response = $rawResult->getParameter('fullDatabaseResponse');
 
         $viewVars = [
-            'name' => $this->name,
+            'name'     => $this->name,
             'template' => [sprintf('%s/%s.html.twig', self::VIEW_TEMPLATE_PATH, $this->name), sprintf('%s/aggregation.html.twig', self::VIEW_TEMPLATE_PATH)],
             'label'    => $this->options['label'],
             'multiple' => $this->options['multiple'],
@@ -119,7 +130,6 @@ class AggregationFilter implements FilterInterface
         }
 
         foreach ($queryFields as $key => $value) {
-
             if ($key !== $this->name) {
                 continue;
             }
@@ -159,7 +169,6 @@ class AggregationFilter implements FilterInterface
 
         $values = [];
         foreach ($buckets as $bucket) {
-
             $relationLabel = null;
             if ($this->options['relation_label'] !== null) {
                 $relationLabel = call_user_func($this->options['relation_label'], $bucket['key'], $queryFields['locale'] ?? null);
