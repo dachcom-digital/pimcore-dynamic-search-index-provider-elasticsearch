@@ -20,6 +20,8 @@ class QueryCleanTermFilter implements OutputChannelModifierFilterInterface
 {
     public function dispatchFilter(OutputChannelAllocatorInterface $outputChannelAllocator, array $options): string
     {
+        $rawTerm = $options['raw_term'] ?? '';
+
         return trim(
             preg_replace(
                 '|\s{2,}|',
@@ -29,7 +31,7 @@ class QueryCleanTermFilter implements OutputChannelModifierFilterInterface
                     ' ',
                     strtolower(
                         strip_tags(
-                            str_replace("\n", ' ', $options['raw_term'])
+                            str_replace("\n", ' ', $rawTerm)
                         )
                     )
                 )
